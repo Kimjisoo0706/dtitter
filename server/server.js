@@ -5,6 +5,9 @@ import morgan from "morgan";
 import helmet from "helmet";
 import tweetsRouter from "./router/tweets.js";
 import authRouter from "./router/auth.js"
+import dotenv from "dotenv";
+import { config } from "./config.js";
+dotenv.config();
 
 
 const app = express();
@@ -27,6 +30,6 @@ app.use((error, req, res, next) => {
   res.sendStatus(500);
 });
 
-app.listen(8080, () => {
-  console.log('Server Running!')
+app.listen(config.host.port, () => {
+  console.log(`Server Running! localhost:${config.host.port}`)
 })
