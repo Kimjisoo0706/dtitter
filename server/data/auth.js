@@ -1,33 +1,22 @@
-// abcd1234: $2b$12$kXPHhHCo9Y.j.s0fsRmpZ.RIAp4EIebxjPqd92hPGyOyuyUKTGLam
-let users = [
-  {
-    id: '1',
-    username: 'jun',
-    password: '$2b$12$kXPHhHCo9Y.j.s0fsRmpZ.RIAp4EIebxjPqd92hPGyOyuyUKTGLam',
-    name: 'jun',
-    email: 'ks@gmail.com',
-    url: 'http://image.com',
-  },
-  {
-    id: '1',
-    username: 'V',
-    password: '$2b$12$kXPHhHCo9Y.j.s0fsRmpZ.RIAp4EIebxjPqd92hPGyOyuyUKTGLam',
-    name: 'V',
-    email: 'ks@gmail.com',
-    url: 'http://image.com',
-  },
-];
+import { db } from '../db/dabase.js'
 
 export async function findByUsername(username) {
-  return users.find((user) => user.name === username);
+  return db
+  .execute('SELECT * FROM users WHERE username=?', [username])
+  .then((result) => result[0][0])
 }
 
 export async function findById(id) {
-  return users.find(user => user.id === id);
+  return db
+  .execute('SELECT * FROM users WHERE id=?', [id])
+  .then((result) => result[0][0])
 }
 
 export async function createUser(user) {
-  const created = { ...user, id: Date.now().toString() };
-  users.push(created);
-  return created.id;
+  const { username, password, name, email, url } = user
+  return db
+    .execute(
+      'INSERT INTO users (username, password, name, email, url) VALUES (?,?,?,?,?)',
+      [username, password, name, email, url]
+    ).then((result) => result[0].insertId);
 }
